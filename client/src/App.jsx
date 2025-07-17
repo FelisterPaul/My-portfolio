@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <NavBar />
-      <div className="p-6">
+      <div className="pt-20 px-6">
         <Routes>
           <Route path="/" element={<WorkExperience />} />
           <Route path="/consultancy" element={<Consultancy />} />
