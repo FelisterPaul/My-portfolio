@@ -52,48 +52,87 @@ export default function WorkExperience() {
       ],
       skills: ["IT Support", "Troubleshooting", "System Maintenance"]
     }
-    // Add more roles as needed...
   ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Work Experience</h1>
+    <div className="px-4 md:px-8 lg:px-24 py-12">
+      <h1 className="text-4xl font-extrabold mb-16 text-center text-gray-800 dark:text-white">
+        Work Experience
+      </h1>
 
-      <div className="relative border-l-2 border-blue-500 pl-6 space-y-10">
-        {experiences.map((exp, index) => (
-          <div key={index} className="relative" data-aos="fade-up">
-            <div className="absolute -left-3 top-1 w-6 h-6 bg-blue-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+      <div className="relative max-w-6xl mx-auto">
+        {/* Vertical timeline line */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 border-l-4 border-blue-500 z-0"></div>
 
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-4 mb-2">
-                {exp.logo && (
-                  <img src={exp.logo} alt={`${exp.company} logo`} className="w-10 h-10 object-contain" />
+        <div className="flex flex-col gap-20">
+          {experiences.map((exp, index) => {
+            const isLeft = index % 2 === 0;
+            return (
+              <div
+                key={index}
+                className="relative flex flex-col md:flex-row items-center md:items-start justify-between"
+                data-aos="fade-up"
+              >
+                {/* Timeline Dot */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full border-4 border-white dark:border-gray-900 shadow-md z-20"></div>
+
+                {/* Left Side */}
+                {isLeft && (
+                  <div className="w-full md:w-[48%] px-4">
+                    <ExperienceCard exp={exp} />
+                  </div>
                 )}
-                <div>
-                  <h2 className="text-xl font-semibold">{exp.role}</h2>
-                  <h3 className="text-md font-medium text-blue-600">{exp.company}</h3>
-                  <p className="text-sm text-gray-500">{exp.duration} · {exp.location}</p>
-                </div>
-              </div>
 
-              <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 space-y-1">
-                {exp.summary.map((point, i) => (
-                  <li key={i}>{point}</li>
-                ))}
-              </ul>
+                {/* Spacer */}
+                <div className="hidden md:block w-[4%]"></div>
 
-              <div className="flex flex-wrap gap-2">
-                {exp.skills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full"
-                  >
-                    {skill}
-                  </span>
-                ))}
+                {/* Right Side */}
+                {!isLeft && (
+                  <div className="w-full md:w-[48%] px-4">
+                    <ExperienceCard exp={exp} />
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExperienceCard({ exp }) {
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition hover:shadow-xl">
+      <div className="flex items-center gap-4 mb-4">
+        {exp.logo && (
+          <img
+            src={exp.logo}
+            alt={`${exp.company} logo`}
+            className="w-12 h-12 object-contain rounded-md border border-gray-300 dark:border-gray-600"
+          />
+        )}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{exp.role}</h2>
+          <h3 className="text-md font-medium text-blue-600">{exp.company}</h3>
+          <p className="text-sm text-gray-500">{exp.duration} · {exp.location}</p>
+        </div>
+      </div>
+
+      <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4 space-y-1">
+        {exp.summary.map((point, i) => (
+          <li key={i}>{point}</li>
+        ))}
+      </ul>
+
+      <div className="flex flex-wrap gap-2">
+        {exp.skills.map((skill, i) => (
+          <span
+            key={i}
+            className="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full"
+          >
+            {skill}
+          </span>
         ))}
       </div>
     </div>
