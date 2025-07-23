@@ -4,8 +4,8 @@ import ProjectCard from '../components/ProjectCard.jsx';
 const ongoingProjects = [
   {
     id: 1,
-    title: "QA Automation Framework Migration",
-    description: "Migrating legacy Selenium tests to a modern Cypress-based framework.",
+    title: "My QA Portfolio development",
+    description: "A hands-on portfolio built with Vite + React and MongoDB to showcase my Quality Assurance journey. It features completed and ongoing projects, short-term consultancy roles, and tools I work with — including Cypress, Postman, and Playwright",
     status: "Ongoing",
   },
   {
