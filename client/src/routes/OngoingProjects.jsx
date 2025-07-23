@@ -5,13 +5,17 @@ const ongoingProjects = [
   {
     id: 1,
     title: "My QA Portfolio development",
-    description: "A hands-on portfolio built with Vite + React and MongoDB to showcase my Quality Assurance journey. It features completed and ongoing projects, short-term consultancy roles, and tools I work with — including Cypress, Postman, and Playwright",
-    status: "Ongoing",
+    description: [ "A hands-on portfolio built with Vite + React and MongoDB to showcase my Quality Assurance journey.",
+                   "It features completed and ongoing projects, short-term consultancy roles, and tools I work with including Cypress, Postman, and Playwright",
+                   "The portfolio is designed to highlight my skills in test automation, API testing, and performance testing." ],
+     status: "Ongoing",
   },
   {
     id: 2,
     title: "Performance Testing for Microservices",
-    description: "Using JMeter and k6 to benchmark API performance under load.",
+    description: [ "Using JMeter and k6, I'm benchmarking API performance under various load conditions.",
+                   "The goal is to identify bottlenecks, validate system reliability, and ensure services can scale effectively.",
+                    "Tests include load, stress, and soak testing, with results visualized through Grafana and integrated into the CI/CD pipeline for continuous monitoring..",],
     status: "Ongoing",
   },
   {
