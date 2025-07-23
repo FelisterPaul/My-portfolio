@@ -81,13 +81,13 @@ export default function WorkExperience() {
 function ExperienceCard({ exp }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full border border-gray-200 dark:border-gray-700 overflow-hidden">
-      {/* Logo Section - New */}
+      {/* Logo Section */}
       <div className="absolute -right-3 -top-3 w-24 h-24 overflow-hidden">
         <div className="absolute transform rotate-45 bg-blue-600 text-white shadow-lg w-[120%] text-center" style={{ top: '32px', right: '-32px' }}>
           <img 
             src={exp.logo} 
             alt={`${exp.company} logo`}
-            className="w-8 h-8 mx-auto my-1 object-contain filter brightness-0 invert"
+            className="w-8 h-8 mx-auto my-1 object-contain"
           />
         </div>
       </div>
@@ -109,7 +109,7 @@ function ExperienceCard({ exp }) {
         </div>
       </div>
 
-      {/* Content Section - remains the same */}
+      {/* Summary & Skills */}
       <div className="p-6">
         <ul className="space-y-2 mb-4 text-gray-600 dark:text-gray-300">
           {exp.summary.map((point, i) => (
