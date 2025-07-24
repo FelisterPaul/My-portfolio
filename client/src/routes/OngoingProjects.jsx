@@ -1,39 +1,17 @@
 import { useState } from 'react';
+import useProjects from '../hooks/useProjects.js';
 import ProjectCard from '../components/ProjectCard.jsx';
-
-const ongoingProjects = [
-  {
-    id: 1,
-    title: "My QA Portfolio development",
-    description: [ "A hands-on portfolio built with Vite + React and MongoDB to showcase my Quality Assurance journey.",
-                   "It features completed and ongoing projects, short-term consultancy roles, and tools I work with including Cypress, Postman, and Playwright",
-                   "The portfolio is designed to highlight my skills in test automation, API testing, and performance testing." ],
-     status: "Ongoing",
-  },
-  {
-    id: 2,
-    title: "Performance Testing for Microservices",
-    description: [ "Using JMeter and k6, I'm benchmarking API performance under various load conditions.",
-                   "The goal is to identify bottlenecks, validate system reliability, and ensure services can scale effectively.",
-                   "Tests include load, stress, and soak testing, with results visualized through Grafana and integrated into the CI/CD pipeline for continuous monitoring..",],
-    status: "Ongoing",
-  },
-  {
-    id: 3,
-    title: "Security Audit for API Gateway",
-    description: [ "Conducting a thorough audit of authentication and authorization mechanisms for RESTful APIs.",
-                    "The focus is on validating token management, role-based access controls, and input validation to prevent common vulnerabilities like JWT tampering, unauthorized access, and API abuse.", 
-                    "Tools like OWASP ZAP and Postman are used to simulate attack scenarios and verify secure handling of tokens across services..",],
-    status: "Ongoing",
-  },
-];
 
 export default function OngoingProjects() {
   const [searchTerm, setSearchTerm] = useState('');
+  const { projects, loading, error } = useProjects("ongoing");
 
-  const filteredProjects = ongoingProjects.filter((project) =>
-    project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = projects.filter((project) =>
+    project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (Array.isArray(project.description)
+      ? project.description.join(' ').toLowerCase()
+      : project.description?.toLowerCase()
+    ).includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -48,19 +26,32 @@ export default function OngoingProjects() {
         className="mb-6 w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      {filteredProjects.length > 0 ? (
+      {/* 🟡 Loading state */}
+      {loading && (
+        <p className="text-blue-600 animate-pulse mb-4">Loading projects from database...</p>
+      )}
+
+      {/* 🔴 Error state */}
+      {error && (
+        <p className="text-red-500 mb-4">Oops! Failed to fetch data: {error}</p>
+      )}
+
+      {/* ✅ Success or Empty fallback */}
+      {!loading && !error && filteredProjects.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
             <ProjectCard
-              key={project.id}
+              key={project._id}
               title={project.title}
               description={project.description}
               status={project.status}
             />
           ))}
         </div>
-      ) : (
-        <p className="text-gray-500">No projects match your search.</p>
+      )}
+
+      {!loading && !error && filteredProjects.length === 0 && (
+        <p className="text-gray-500">No ongoing projects match your search or are available right now.</p>
       )}
     </div>
   );
