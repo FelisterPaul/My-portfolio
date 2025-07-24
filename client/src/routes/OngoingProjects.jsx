@@ -15,13 +15,15 @@ const ongoingProjects = [
     title: "Performance Testing for Microservices",
     description: [ "Using JMeter and k6, I'm benchmarking API performance under various load conditions.",
                    "The goal is to identify bottlenecks, validate system reliability, and ensure services can scale effectively.",
-                    "Tests include load, stress, and soak testing, with results visualized through Grafana and integrated into the CI/CD pipeline for continuous monitoring..",],
+                   "Tests include load, stress, and soak testing, with results visualized through Grafana and integrated into the CI/CD pipeline for continuous monitoring..",],
     status: "Ongoing",
   },
   {
     id: 3,
     title: "Security Audit for API Gateway",
-    description: "Validating authentication flows and token handling for REST APIs.",
+    description: [ "Conducting a thorough audit of authentication and authorization mechanisms for RESTful APIs.",
+                    "The focus is on validating token management, role-based access controls, and input validation to prevent common vulnerabilities like JWT tampering, unauthorized access, and API abuse.", 
+                    "Tools like OWASP ZAP and Postman are used to simulate attack scenarios and verify secure handling of tokens across services..",],
     status: "Ongoing",
   },
 ];
