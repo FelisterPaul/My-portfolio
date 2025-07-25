@@ -37,4 +37,22 @@ qa-portfolio/ ├─ client/ # React frontend ├─ server/ # Express backend w
 5. Start both servers
    pnpm dev # Vite frontend  
    pnpm start # Express backend
+  ## If using npm or yarn:
+ cd client
+ npm run dev    # or yarn dev
+ cd ../server
+ npm start      # or yarn start
 
+## Challenges faced when setting up my project.
+1. I had a changelle setting up Tailwind version 4.
+Tailwind Config Misalignment
+Tailwind v4 uses ESM syntax. Your tailwind.config.js might need to become tailwind.config.mjs, and you'll use:
+
+## // tailwind.config.mjs
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
