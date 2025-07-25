@@ -6,6 +6,7 @@ const sampleProjects = [
   {
     title: "QA Dashboard",
     description: "Real-time dashboard for tracking QA KPIs across projects.",
+                  "techStack": ["React", "Node.js", "MongoDB", "Socket.io"],
     techStack: ["React", "Node.js", "MongoDB", "Chart.js"],
     status: "ongoing",
     dateStarted: new Date("2025-06-01"),
