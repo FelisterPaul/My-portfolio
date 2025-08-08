@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function useProjects(status = 'ongoing') {
+export default function useProjects(status = 'Ongoing') {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

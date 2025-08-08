@@ -15,11 +15,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// 🔍 Get all projects (with optional status filter)
+// 🔍 Get all projects (with optional status filter - now case-insensitive)
 router.get('/', async (req, res) => {
   const { status } = req.query;
   try {
-    const query = status ? { status } : {};
+    const query = status
+      ? { status: { $regex: `^${status}$`, $options: 'i' } } // ✅ Match 'Ongoing', 'ongoing', etc.
+      : {};
+
     const projects = await Project.find(query).sort({ createdAt: -1 });
     res.json(projects);
   } catch (err) {
