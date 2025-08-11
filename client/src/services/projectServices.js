@@ -9,9 +9,9 @@ const projectService = {
     return response.data;
   },
 
-  // Get project by ID
-  getProject: async (id) => {
-    const response = await axios.get(`${API_URL}/${id}`);
+  // Get projects by status
+  getProjectsByStatus: async (status) => {
+    const response = await axios.get(`${API_URL}/status/${status}`);
     return response.data;
   },
 
@@ -30,18 +30,6 @@ const projectService = {
   // Delete project
   deleteProject: async (id) => {
     const response = await axios.delete(`${API_URL}/${id}`);
-    return response.data;
-  },
-
-  // Get projects by status
-  getProjectsByStatus: async (status) => {
-    const response = await axios.get(`${API_URL}/status/${status}`);
-    return response.data;
-  },
-
-  // Get project statistics
-  getProjectStats: async () => {
-    const response = await axios.get(`${API_URL}/stats`);
     return response.data;
   }
 };
