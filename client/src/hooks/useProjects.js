@@ -9,13 +9,15 @@ export const useProjects = (status) => {
   const fetchProjects = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = status 
         ? await projectService.getProjectsByStatus(status)
         : await projectService.getAllProjects();
-      setProjects(data);
-      setError(null);
+      setProjects(data || []);
     } catch (err) {
+      console.error('Failed to fetch projects:', err);
       setError(err.message);
+      setProjects([]);
     } finally {
       setLoading(false);
     }
@@ -29,6 +31,7 @@ export const useProjects = (status) => {
     projects, 
     loading, 
     error,
-    mutate: fetchProjects // Add this to allow manual refetching
+    mutate: fetchProjects,
+    clearError: () => setError(null)
   };
 };
