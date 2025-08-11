@@ -70,4 +70,76 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// 🔍 Get all ongoing projects
+router.get('/status/ongoing', async (req, res) => {
+  try {
+    const projects = await Project.find({ 
+      status: { $regex: '^ongoing$', $options: 'i' } 
+    }).sort({ dateStarted: -1 });
+    res.json(projects);
+  } catch (err) {
+    console.error("❌ Error fetching ongoing projects:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 🔍 Get all in-progress projects
+router.get('/status/in-progress', async (req, res) => {
+  try {
+    const projects = await Project.find({ 
+      status: { $regex: '^in-progress$', $options: 'i' } 
+    }).sort({ dateStarted: -1 });
+    res.json(projects);
+  } catch (err) {
+    console.error("❌ Error fetching in-progress projects:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✏️ Update project status
+router.patch('/:id/status', async (req, res) => {
+  const { status } = req.body;
+  
+  if (!status) {
+    return res.status(400).json({ error: 'Status is required' });
+  }
+
+  try {
+    const updated = await Project.findByIdAndUpdate(
+      req.params.id, 
+      { status: status },
+      { new: true, runValidators: true }
+    );
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    
+    res.json(updated);
+  } catch (err) {
+    console.error("❌ Error updating project status:", err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 📊 Get project statistics
+router.get('/stats', async (req, res) => {
+  try {
+    const stats = await Project.aggregate([
+      {
+        $group: {
+          _id: { $toLower: '$status' },
+          count: { $sum: 1 },
+          projects: { $push: '$$ROOT' }
+        }
+      }
+    ]);
+    
+    res.json(stats);
+  } catch (err) {
+    console.error("❌ Error fetching project statistics:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
