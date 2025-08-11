@@ -8,7 +8,13 @@
     "start": "node src/index.js",
     "dev": "nodemon"
   },
-  "keywords": ["QA", "portfolio", "express", "mongodb", "nodemailer"],
+  "keywords": [
+    "QA",
+    "portfolio",
+    "express",
+    "mongodb",
+    "nodemailer"
+  ],
   "author": "Felister Mwende Paul",
   "license": "ISC",
   "dependencies": {
