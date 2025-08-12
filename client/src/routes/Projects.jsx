@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useProjects } from '../hooks/useProjects';
-import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/solid';
 
 export default function Projects() {
   const { projects, loading, error, mutate } = useProjects();
