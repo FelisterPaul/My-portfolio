@@ -1,18 +1,8 @@
 import { useState } from 'react';
-import useProjects from '../hooks/useProjects.js';
-import ProjectCard from '../components/ProjectCard.jsx';
+import useProjects from '../hooks/useProjects';
 
 export default function OngoingProjects() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const { projects, loading, error } = useProjects("ongoing");
-
-  const filteredProjects = projects.filter((project) =>
-    project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (Array.isArray(project.description)
-      ? project.description.join(' ').toLowerCase()
-      : project.description?.toLowerCase()
-    ).includes(searchTerm.toLowerCase())
-  );
+  const { projects, loading, error } = useProjects('ongoing');
 
   return (
     <div className="p-6">
