@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-// Change from named export to default export
-export default function useProjects(status) {
+const API_URL = 'http://localhost:5000/api/projects';
+
+export default function useProjects(status = null) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,11 +12,21 @@ export default function useProjects(status) {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(`http://localhost:5000/api/projects${status ? `/status/${status}` : ''}`);
-      setProjects(response.data || []);
+      
+      const url = status 
+        ? `${API_URL}/status/${status}`
+        : API_URL;
+
+      const response = await axios.get(url);
+      
+      if (!response.data) {
+        throw new Error('No data received from server');
+      }
+
+      setProjects(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       setProjects([]);
     } finally {
       setLoading(false);
@@ -26,11 +37,47 @@ export default function useProjects(status) {
     fetchProjects();
   }, [fetchProjects]);
 
+  const deleteProject = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      await fetchProjects(); // Refresh projects after deletion
+      return true;
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      return false;
+    }
+  };
+
+  const addProject = async (projectData) => {
+    try {
+      await axios.post(API_URL, projectData);
+      await fetchProjects(); // Refresh projects after adding
+      return true;
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      return false;
+    }
+  };
+
+  const updateProject = async (id, projectData) => {
+    try {
+      await axios.put(`${API_URL}/${id}`, projectData);
+      await fetchProjects(); // Refresh projects after updating
+      return true;
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      return false;
+    }
+  };
+
   return { 
     projects, 
     loading, 
     error,
     mutate: fetchProjects,
-    clearError: () => setError(null)
+    clearError: () => setError(null),
+    deleteProject,
+    addProject,
+    updateProject
   };
 }
