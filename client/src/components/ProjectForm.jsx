@@ -46,7 +46,7 @@ export default function ProjectForm({ project, onSubmit, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-md">
           <p className="text-sm text-red-600">{error}</p>
@@ -65,9 +65,76 @@ export default function ProjectForm({ project, onSubmit, onCancel }) {
         />
       </div>
 
-      {/* ... other form fields remain the same ... */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Description</label>
+        <textarea
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          rows={3}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          required
+          disabled={loading}
+        />
+      </div>
 
-      <div className="flex justify-end space-x-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+          Tech Stack (comma-separated)
+        </label>
+        <input
+          type="text"
+          value={formData.techStack}
+          onChange={(e) => setFormData({ ...formData, techStack: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          disabled={loading}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
+          <select
+            value={formData.status}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            disabled={loading}
+          >
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+            <option value="on-hold">On Hold</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Category</label>
+          <select
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            disabled={loading}
+          >
+            <option value="web">Web</option>
+            <option value="mobile">Mobile</option>
+            <option value="api">API</option>
+            <option value="automation">Automation</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Highlights</label>
+        <textarea
+          value={formData.highlights}
+          onChange={(e) => setFormData({ ...formData, highlights: e.target.value })}
+          rows={4}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Enter highlights (one per line)"
+          disabled={loading}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-3 pt-4">
         <button
           type="button"
           onClick={onCancel}
