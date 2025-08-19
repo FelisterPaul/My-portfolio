@@ -6,36 +6,39 @@ import projectRoutes from './routes/projects.js';
 
 const app = express();
 
+// Enable detailed logging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+  origin: config.corsOrigin,
+  credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/projects', projectRoutes);
-
-// Health check route
+// Add health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
+// Routes
+app.use('/api/projects', projectRoutes);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err);
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal Server Error'
-  });
+  console.error('Error:', err);
+  res.status(500).json({ error: err.message });
 });
 
 // Database connection
 mongoose.connect(config.mongoUri)
   .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch(err => console.error('MongoDB connection error:', err));
 
 const PORT = config.port || 5000;
 
