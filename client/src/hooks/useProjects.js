@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import projectService from '../services/projectService';
+import axios from 'axios';
 
-export const useProjects = (status) => {
+// Change from named export to default export
+export default function useProjects(status) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,10 +11,8 @@ export const useProjects = (status) => {
     try {
       setLoading(true);
       setError(null);
-      const data = status 
-        ? await projectService.getProjectsByStatus(status)
-        : await projectService.getAllProjects();
-      setProjects(data || []);
+      const response = await axios.get(`http://localhost:5000/api/projects${status ? `/status/${status}` : ''}`);
+      setProjects(response.data || []);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
       setError(err.message);
@@ -34,4 +33,4 @@ export const useProjects = (status) => {
     mutate: fetchProjects,
     clearError: () => setError(null)
   };
-};
+}
