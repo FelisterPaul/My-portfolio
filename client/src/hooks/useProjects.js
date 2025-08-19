@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/projects';
+import api from '../config/api';
 
 export default function useProjects(status = null) {
   const [projects, setProjects] = useState([]);
@@ -12,21 +10,12 @@ export default function useProjects(status = null) {
     try {
       setLoading(true);
       setError(null);
-      
-      const url = status 
-        ? `${API_URL}/status/${status}`
-        : API_URL;
-
-      const response = await axios.get(url);
-      
-      if (!response.data) {
-        throw new Error('No data received from server');
-      }
-
-      setProjects(Array.isArray(response.data) ? response.data : []);
+      const url = status ? `/projects/status/${status}` : '/projects';
+      const response = await api.get(url);
+      setProjects(response.data || []);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
-      setError(err.response?.data?.message || err.message);
+      setError(err.message);
       setProjects([]);
     } finally {
       setLoading(false);
@@ -39,33 +28,11 @@ export default function useProjects(status = null) {
 
   const deleteProject = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      await fetchProjects(); // Refresh projects after deletion
+      await api.delete(`/projects/${id}`);
+      await fetchProjects();
       return true;
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
-      return false;
-    }
-  };
-
-  const addProject = async (projectData) => {
-    try {
-      await axios.post(API_URL, projectData);
-      await fetchProjects(); // Refresh projects after adding
-      return true;
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
-      return false;
-    }
-  };
-
-  const updateProject = async (id, projectData) => {
-    try {
-      await axios.put(`${API_URL}/${id}`, projectData);
-      await fetchProjects(); // Refresh projects after updating
-      return true;
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      setError(err.message);
       return false;
     }
   };
@@ -74,10 +41,7 @@ export default function useProjects(status = null) {
     projects, 
     loading, 
     error,
-    mutate: fetchProjects,
-    clearError: () => setError(null),
     deleteProject,
-    addProject,
-    updateProject
+    refetch: fetchProjects
   };
 }
