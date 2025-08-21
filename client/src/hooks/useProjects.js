@@ -28,12 +28,31 @@ export default function useProjects(status = null) {
 
   const deleteProject = async (id) => {
     try {
+      setLoading(true);
+      setError(null);
       await api.delete(`/projects/${id}`);
-      await fetchProjects();
+      setProjects(projects.filter(project => project._id !== id));
       return true;
     } catch (err) {
       setError(err.message);
       return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addProject = async (projectData) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.post('/projects', projectData);
+      setProjects([...projects, response.data]);
+      return true;
+    } catch (err) {
+      setError(err.message);
+      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,6 +61,7 @@ export default function useProjects(status = null) {
     loading, 
     error,
     deleteProject,
+    addProject,
     refetch: fetchProjects
   };
 }
