@@ -1,8 +1,30 @@
-import { useState } from 'react';
-import useProjects from '../hooks/useProjects';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function OngoingProjects() {
-  const { projects, loading, error } = useProjects('ongoing');
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:5000/api/projects/status/ongoing');
+        setProjects(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <div className="p-6">
@@ -30,12 +52,13 @@ export default function OngoingProjects() {
       {!loading && !error && filteredProjects.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
-            <ProjectCard
+            <div
               key={project._id}
-              title={project.title}
-              description={project.description}
-              status={project.status}
-            />
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            >
+              <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
+              <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
+            </div>
           ))}
         </div>
       )}
