@@ -17,7 +17,9 @@ router.get('/', async (req, res) => {
 router.get('/status/:status', async (req, res) => {
   const { status } = req.params;
   try {
-    const projects = await Project.find({ status: status }).sort({ dateStarted: -1 });
+    const projects = await Project.find({ 
+      status: { $regex: new RegExp(`^${status}$`, 'i') } 
+    }).sort({ dateStarted: -1 });
     res.json(projects);
   } catch (err) {
     res.status(500).json({ error: err.message });
