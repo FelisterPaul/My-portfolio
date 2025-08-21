@@ -13,6 +13,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get projects by status
+router.get('/status/:status', async (req, res) => {
+  const { status } = req.params;
+  try {
+    const projects = await Project.find({ status: status }).sort({ dateStarted: -1 });
+    res.json(projects);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Add project
 router.post('/', async (req, res) => {
   try {
