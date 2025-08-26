@@ -6,7 +6,8 @@ const router = express.Router();
 // Middleware to check if user is admin (example)
 const isAdmin = (req, res, next) => {
   // Replace with your actual authentication logic
-  const isAdminUser = true; // Example: Check if user is admin
+  // This is a placeholder - you'll need to implement proper authentication
+  const isAdminUser = true;  // Example: Check if user is admin
   if (isAdminUser) {
     next();
   } else {
