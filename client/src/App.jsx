@@ -8,13 +8,12 @@ import Consultancy from './routes/Consultancy.jsx';
 import CompletedProjects from './routes/CompletedProjects.jsx';
 import OngoingProjects from './routes/OngoingProjects.jsx';
 import Projects from './routes/Projects.jsx';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function App() {
   const { user, loading } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -24,12 +23,10 @@ function App() {
       });
     } catch (error) {
       console.error('AOS initialization failed:', error);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
-  if (loading || isLoading) {
+  if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
