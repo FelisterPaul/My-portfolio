@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useProjects from '../hooks/useProjects';
 import ProjectForm from '../components/ProjectForm';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 export default function CompletedProjects() {
   const { projects, loading, error, deleteProject, addProject, refetch } = useProjects('completed');
   const [isAdding, setIsAdding] = useState(false);
+  const { user } = useAuth();
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      await deleteProject(id);
-      refetch();
+      try {
+        await deleteProject(id);
+        refetch();
+      } catch (err) {
+        console.error("Error deleting project:", err);
+      }
     }
   };
 
   const handleAdd = async (projectData) => {
-    await addProject(projectData);
-    setIsAdding(false);
-    refetch();
+    try {
+      await addProject(projectData);
+      setIsAdding(false);
+      refetch();
+    } catch (err) {
+      console.error("Error adding project:", err);
+    }
   };
 
   if (loading) {
@@ -31,9 +42,11 @@ export default function CompletedProjects() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Completed Projects</h1>
-        <button onClick={() => setIsAdding(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add Project
-        </button>
+        {user?.role === 'admin' && (
+          <button onClick={() => setIsAdding(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Add Project
+          </button>
+        )}
       </div>
 
       {isAdding && (
@@ -52,9 +65,11 @@ export default function CompletedProjects() {
           >
             <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
             <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
-            <button onClick={() => handleDelete(project._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-              Delete
-            </button>
+            {user?.role === 'admin' && (
+              <button onClick={() => handleDelete(project._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+              </button>
+            )}
           </div>
         ))}
       </div>
