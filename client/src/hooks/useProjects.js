@@ -56,12 +56,16 @@ export default function useProjects(status = null) {
     }
   };
 
+  const refetch = useCallback(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
   return { 
     projects, 
     loading, 
     error,
     deleteProject,
     addProject,
-    refetch: fetchProjects
+    refetch
   };
 }
