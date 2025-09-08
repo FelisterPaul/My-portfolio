@@ -1,23 +1,29 @@
-import { AuthProvider } from './context/AuthContext';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Login';
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
-import WorkExperience from './routes/WorkExperience';
-import Consultancy from './routes/Consultancy';
-import CompletedProjects from './routes/CompletedProjects';
-import OngoingProjects from './routes/OngoingProjects';
-import Projects from './routes/Projects';
-import { useAuth } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import NavBar from './components/NavBar.jsx';
+import Footer from './components/Footer.jsx';
+import WorkExperience from './routes/WorkExperience.jsx';
+import Consultancy from './routes/Consultancy.jsx';
+import CompletedProjects from './routes/CompletedProjects.jsx';
+import OngoingProjects from './routes/OngoingProjects.jsx';
+import Projects from './routes/Projects.jsx';
 import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-function AppRoutes() {
+function App() {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    AOS.init({ duration: 800, once: true });
+    try {
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+    } catch (error) {
+      console.error('AOS initialization failed:', error);
+    }
   }, []);
 
   if (loading) {
@@ -25,36 +31,36 @@ function AppRoutes() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <NavBar />
-      <main className="pt-24 px-4 md:px-8 lg:px-16">
-        <div className="max-w-7xl mx-auto">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                user ? <WorkExperience /> : <Navigate to="/login" replace />
-              }
-            />
-            <Route path="/consultancy" element={<Consultancy />} />
-            <Route path="/completed-projects" element={<CompletedProjects />} />
-            <Route path="/ongoing-projects" element={<OngoingProjects />} />
-            <Route path="/projects" element={<Projects />} />
-          </Routes>
+    <Router>
+      <AuthProvider>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          <NavBar />
+          <main className="pt-24 px-4 md:px-8 lg:px-16">
+            <div className="max-w-7xl mx-auto">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/"
+                  element={
+                    user ? (
+                      <WorkExperience />
+                    ) : (
+                      <Navigate to="/login" replace />
+                    )
+                  }
+                />
+                <Route path="/consultancy" element={<Consultancy />} />
+                <Route path="/completed-projects" element={<CompletedProjects />} />
+                <Route path="/ongoing-projects" element={<OngoingProjects />} />
+                <Route path="/projects" element={<Projects />} />
+              </Routes>
+            </div>
+          </main>
+          <Footer />
         </div>
-      </main>
-      <Footer />
-    </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
-export default function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
-  );
-}
+export default App;
