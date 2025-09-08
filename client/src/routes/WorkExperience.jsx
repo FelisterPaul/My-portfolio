@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Login from '../components/Login';
+import { useAuth } from '../context/AuthContext';
 
 export default function WorkExperience() {
+  const { user } = useAuth();
+
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
@@ -56,24 +60,34 @@ export default function WorkExperience() {
 
   return (
     <div className="px-4 md:px-6 lg:px-8 py-12 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <h1 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gray-800 dark:text-white">
-        Work Experience
-      </h1>
-
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {experiences.map((exp, index) => (
-            <div
-              key={index}
-              data-aos="zoom-in"
-              data-aos-delay={index * 100}
-              className="group relative"
-            >
-              <ExperienceCard exp={exp} />
-            </div>
-          ))}
+      {/* Login UI always at the top */}
+      {!user && (
+        <div className="mb-8">
+          <Login />
         </div>
-      </div>
+      )}
+
+      {/* Work experience content always visible */}
+      <section>
+        <h1 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gray-800 dark:text-white">
+          Work Experience
+        </h1>
+
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {experiences.map((exp, index) => (
+              <div
+                key={index}
+                data-aos="zoom-in"
+                data-aos-delay={index * 100}
+                className="group relative"
+              >
+                <ExperienceCard exp={exp} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
