@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import LogoutButton from './LogoutButton';
 
 export default function NavBar() {
   return (
@@ -35,6 +36,7 @@ export default function NavBar() {
       >
         Ongoing Projects
       </NavLink>
+      <LogoutButton />
     </nav>
   );
 }
