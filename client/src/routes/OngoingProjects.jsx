@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useProjects from '../hooks/useProjects';
 import ProjectForm from '../components/ProjectForm';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+
 
 export default function OngoingProjects() {
   const { projects, loading, error, deleteProject, addProject, refetch } = useProjects('ongoing');
