@@ -14,8 +14,7 @@ export default function useProjects(status = null) {
       const response = await api.get(url);
       setProjects(response.data || []);
     } catch (err) {
-      console.error('Failed to fetch projects:', err);
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
       setProjects([]);
     } finally {
       setLoading(false);
@@ -34,7 +33,7 @@ export default function useProjects(status = null) {
       setProjects(projects.filter(project => project._id !== id));
       return true;
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
       return false;
     } finally {
       setLoading(false);
@@ -49,16 +48,12 @@ export default function useProjects(status = null) {
       setProjects([...projects, response.data]);
       return true;
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
       return false;
     } finally {
       setLoading(false);
     }
   };
-
-  const refetch = useCallback(() => {
-    fetchProjects();
-  }, [fetchProjects]);
 
   return { 
     projects, 
@@ -66,6 +61,6 @@ export default function useProjects(status = null) {
     error,
     deleteProject,
     addProject,
-    refetch
+    refetch: fetchProjects
   };
 }
