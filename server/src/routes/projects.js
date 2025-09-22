@@ -3,19 +3,11 @@ import Project from '../models/Project.js';
 
 const router = express.Router();
 
-// Middleware to check if user is admin (example)
 const isAdmin = (req, res, next) => {
-  // Replace with your actual authentication logic
-  // This is a placeholder - you'll need to implement proper authentication
-  const isAdminUser = true;  // Example: Check if user is admin
-  if (isAdminUser) {
-    next();
-  } else {
-    res.status(403).json({ error: 'Unauthorized' });
-  }
+  // For now, always allow. Replace with real auth in production.
+  next();
 };
 
-// Get all projects
 router.get('/', async (req, res) => {
   try {
     const projects = await Project.find().sort({ dateStarted: -1 });
@@ -25,7 +17,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get projects by status
 router.get('/status/:status', async (req, res) => {
   const { status } = req.params;
   try {
@@ -38,7 +29,6 @@ router.get('/status/:status', async (req, res) => {
   }
 });
 
-// Add project (Admin only)
 router.post('/', isAdmin, async (req, res) => {
   try {
     const project = new Project(req.body);
@@ -49,7 +39,6 @@ router.post('/', isAdmin, async (req, res) => {
   }
 });
 
-// Delete project (Admin only)
 router.delete('/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
