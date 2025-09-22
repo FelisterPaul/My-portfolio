@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: config.corsOrigin,
+  origin: 'http://localhost:5173', // or your frontend port
   credentials: true
 }));
 
