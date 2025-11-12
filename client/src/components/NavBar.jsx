@@ -25,17 +25,13 @@ export default function NavBar() {
             Consultancy
           </Link>
 
-          {/* Admin-only buttons */}
-          {isAdmin && (
-            <>
-              <Link 
-                to="/admin/projects" 
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold"
-              >
-                ➕ Add/Remove Projects
-              </Link>
-            </>
-          )}
+          {/* Add/Remove Projects button - always visible */}
+          <Link 
+            to="/admin/projects" 
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold"
+          >
+            ➕ Add/Remove Projects
+          </Link>
         </div>
       </div>
     </nav>
