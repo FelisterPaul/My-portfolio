@@ -1,51 +1,26 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export function AuthProvider({ children }) {
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
-
-  const login = async (username, password) => {
-    if (username === 'admin' && password === 'password') {
-      const userData = {
-        username: 'admin',
-        role: 'admin'
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-    } else {
-      throw new Error('Invalid credentials');
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
-
-  const contextValue = {
-    user,
-    login,
-    logout,
-    loading
+  const toggleAdmin = () => {
+    setIsAdmin((prevIsAdmin) => !prevIsAdmin);
+    console.log('Admin mode:', !isAdmin);
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{ isAdmin, toggleAdmin }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+}

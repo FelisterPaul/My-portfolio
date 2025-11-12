@@ -1,6 +1,5 @@
 import { useAuth } from './context/AuthContext';
-import Login from './components/Login';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
 import WorkExperience from './routes/WorkExperience.jsx';
@@ -8,13 +7,10 @@ import Consultancy from './routes/Consultancy.jsx';
 import CompletedProjects from './routes/CompletedProjects.jsx';
 import OngoingProjects from './routes/OngoingProjects.jsx';
 import Projects from './routes/Projects.jsx';
+import AdminProjects from './routes/AdminProjects.jsx';
 
 function AppRoutes() {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
+  const { isAdmin } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -22,21 +18,22 @@ function AppRoutes() {
       <main className="pt-24 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                user ? (
-                  <WorkExperience />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
+            {/* public routes */}
+            <Route path="/" element={<WorkExperience />} />
             <Route path="/consultancy" element={<Consultancy />} />
             <Route path="/completed-projects" element={<CompletedProjects />} />
             <Route path="/ongoing-projects" element={<OngoingProjects />} />
             <Route path="/projects" element={<Projects />} />
+            
+            {/* admin-only routes */}
+            {isAdmin && (
+              <>
+                <Route path="/admin/projects" element={<AdminProjects />} />
+              </>
+            )}
+            
+            {/* catch-all */}
+            <Route path="*" element={<div className="text-center py-12">Page not found</div>} />
           </Routes>
         </div>
       </main>

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import Login from '../components/Login';
 
 const defaultExperiences = [
 	{
@@ -58,7 +56,6 @@ const defaultExperiences = [
 ];
 
 export default function WorkExperience() {
-  const { user } = useAuth();
   const [experiences, setExperiences] = useState(defaultExperiences);
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +64,7 @@ export default function WorkExperience() {
     const fetchExperiences = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/work-experience'); // keep or change to correct endpoint
+        const response = await axios.get('/api/work-experience');
         if (!mounted) return;
         if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
           setExperiences(response.data);
@@ -75,7 +72,6 @@ export default function WorkExperience() {
           setExperiences(defaultExperiences);
         }
       } catch (err) {
-        // backend may be down or returning 500 — log but do not show a banner to the user
         console.warn('WorkExperience: failed to fetch remote experiences:', err?.message || err);
         setExperiences(defaultExperiences);
       } finally {
@@ -86,11 +82,6 @@ export default function WorkExperience() {
     fetchExperiences();
     return () => { mounted = false; };
   }, []);
-
-  // if your app requires login to view, keep login behavior; otherwise allow viewing.
-  if (!user) {
-    return <Login />;
-  }
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
