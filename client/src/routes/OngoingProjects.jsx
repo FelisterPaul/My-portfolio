@@ -35,7 +35,9 @@ export default function OngoingProjects() {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center min-h-screen">Error: {error}</div>;
+    // render readable message and avoid throwing if error is an object
+    const message = typeof error === 'string' ? error : (error?.message || JSON.stringify(error));
+    return <div className="flex items-center justify-center min-h-screen">Error: {message}</div>;
   }
 
   return (
@@ -50,23 +52,27 @@ export default function OngoingProjects() {
       </div>
 
       {isAdding && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-8">
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-lg w-full">
             <ProjectForm onSubmit={handleAdd} onCancel={() => setIsAdding(false)} />
           </div>
         </div>
       )}
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map(project => (
+        {(projects || []).length === 0 && (
+          <div className="col-span-full text-center text-gray-600 dark:text-gray-300">No projects found.</div>
+        )}
+
+        {(projects || []).map((project, idx) => (
           <div 
-            key={project._id}
+            key={project?._id || project?.id || idx}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
           >
-            <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
-            <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
+            <h2 className="text-xl font-semibold mb-2">{project?.title || 'Untitled project'}</h2>
+            <p className="text-gray-600 dark:text-gray-300">{project?.description || ''}</p>
             {user?.role === 'admin' && (
-              <button onClick={() => handleDelete(project._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              <button onClick={() => handleDelete(project._id || project.id)} className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Delete
               </button>
             )}
