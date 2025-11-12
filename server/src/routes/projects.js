@@ -1,54 +1,72 @@
-import express from 'express';
-import Project from '../models/Project.js';
+import express from "express";
+import Project from "../models/Project.js";
 
 const router = express.Router();
 
+// middleware: check if request has admin role (from query or header for now)
 const isAdmin = (req, res, next) => {
-  // For now, always allow. Replace with real auth in production.
-  next();
+  const role = req.headers["x-admin-role"] || req.query.adminRole;
+  if (role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access required" });
+  }
 };
 
-router.get('/', async (req, res) => {
+// GET /api/projects?status=ongoing|completed
+router.get("/", async (req, res, next) => {
   try {
-    const projects = await Project.find().sort({ dateStarted: -1 });
+    const { status } = req.query;
+    const filter = {};
+    if (status) {
+      filter.status = String(status).toLowerCase();
+    }
+    const projects = await Project.find(filter).sort({ dateStarted: -1 }).lean();
     res.json(projects);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
-router.get('/status/:status', async (req, res) => {
-  const { status } = req.params;
+// GET /api/projects/:id
+router.get("/:id", async (req, res, next) => {
   try {
-    const projects = await Project.find({ 
-      status: { $regex: new RegExp(`^${status}$`, 'i') } 
-    }).sort({ dateStarted: -1 });
-    res.json(projects);
+    const project = await Project.findById(req.params.id).lean();
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    res.json(project);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
-router.post('/', isAdmin, async (req, res) => {
+// POST /api/projects (admin only)
+router.post("/", isAdmin, async (req, res, next) => {
   try {
-    const project = new Project(req.body);
+    const { title, description, techStack, status } = req.body;
+    if (!title || !description) {
+      return res.status(400).json({ message: "title and description required" });
+    }
+    const project = new Project({
+      title,
+      description,
+      techStack: techStack || [],
+      status: status || "ongoing",
+    });
     await project.save();
     res.status(201).json(project);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', isAdmin, async (req, res) => {
+// DELETE /api/projects/:id (admin only)
+router.delete("/:id", isAdmin, async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const project = await Project.findByIdAndDelete(id);
-    if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
-    }
-    res.json({ message: 'Project deleted successfully' });
+    const project = await Project.findByIdAndDelete(req.params.id);
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    res.json({ message: "Project deleted" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 

@@ -1,12 +1,12 @@
 {
-  "name": "server",
+  "name": "my-portfolio-server",
   "version": "1.0.0",
   "description": "QA Portfolio Backend",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon"
+    "dev": "NODE_ENV=development node src/index.js"
   },
   "keywords": [
     "QA",
